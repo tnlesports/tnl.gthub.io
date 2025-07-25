@@ -1,4 +1,176 @@
-baghdadNow.getFullYear(),
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TNL ESPORTS | تقديم اللاعبين</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+      background-size: 600% 600%;
+      animation: gradientBG 15s ease infinite;
+      color: white;
+      overflow: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      z-index: 2;
+    }
+
+    .notice {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: #00fff7;
+      animation: fadeIn 2s ease-in-out infinite alternate;
+    }
+
+    .subnotice {
+      font-size: 1.1em;
+      margin-bottom: 25px;
+      color: #7fffd4;
+      font-weight: 600;
+    }
+
+    .countdown {
+      font-size: 3em;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 0 0 20px #00fff7;
+      margin-bottom: 10px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+
+    .form-container {
+      display: none;
+      position: relative;
+      z-index: 3;
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 10px;
+      color: #fff;
+      margin-top: 60px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px 30px;
+      background-color: #00fff7;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #000;
+      color: #aaa;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      z-index: 4;
+    }
+  </style>
+</head>
+<body>
+
+<!-- شاشة الانتظار -->
+<div class="overlay" id="waiting">
+  <div class="notice">🔥 سيتم تفعيل الموقع الساعة 6 مساءً بتوقيت بغداد</div>
+  <div class="subnotice">(الوقت المحلي حسب منطقتك)</div>
+  <div class="countdown" id="countdown">00 : 00 : 00 : 00</div>
+  <div class="subnotice">شكراً لكم ❤️</div>
+</div>
+
+<!-- نموذج التقديم -->
+<div class="form-container" id="formSection">
+  <h2>نموذج تقديم اللاعبين - TNL ESPORTS</h2>
+  <form id="applyForm">
+    <label>الاسم الحقيقي:</label>
+    <input type="text" name="realName" required />
+
+    <label>اسم داخل اللعبة:</label>
+    <input type="text" name="gameName" required />
+
+    <label>الآيدي الرسمي:</label>
+    <input type="text" name="playerId" required />
+
+    <label>نوع اللعبة:</label>
+    <select name="gameType" required>
+      <option value="">اختر نوع اللعبة</option>
+      <option value="PUBG">PUBG</option>
+      <option value="Valorant">Valorant</option>
+      <option value="Free Fire">Free Fire</option>
+      <option value="COD">Call of Duty</option>
+    </select>
+
+    <button type="submit">📩 إرسال الطلب</button>
+  </form>
+</div>
+
+<footer>
+  &copy; 2025 TNL ESPORTS - جميع الحقوق محفوظة
+</footer>
+
+<script>
+  // حساب توقيت بغداد UTC+3 بدون تعديل التوقيت الصيفي
+  function getBaghdadTimeNow() {
+    const now = new Date();
+    // احصل على التوقيت العالمي UTC بالمللي ثانية
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    // بغداد UTC+3
+    return new Date(utc + (3 * 60 * 60 * 1000));
+  }
+
+  // ضبط وقت فتح النموذج: غدا الساعة 18:00 بتوقيت بغداد
+  const baghdadNow = getBaghdadTimeNow();
+  const openTime = new Date(
+    baghdadNow.getFullYear(),
     baghdadNow.getMonth(),
     baghdadNow.getDate() + 1,
     18, 0, 0
@@ -23,7 +195,7 @@ baghdadNow.getFullYear(),
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       countdownEl.textContent =
-        ${String(days).padStart(2, '0')} : ${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')};
+        `${String(days).padStart(2, '0')} : ${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')}`;
     }
   }
 
@@ -33,7 +205,7 @@ baghdadNow.getFullYear(),
   document.getElementById("applyForm").addEventListener("submit", function(e){
     e.preventDefault();
     const data = Object.fromEntries(new FormData(this).entries());
-    const message = 🎮 طلب تقديم جديد:\n\n👤 الاسم الحقيقي: ${data.realName}\n🎯 اسم اللعبة: ${data.gameName}\n🆔 ID: ${data.playerId}\n🕹️ نوع اللعبة: ${data.gameType};
+    const message = `🎮 طلب تقديم جديد:\n\n👤 الاسم الحقيقي: ${data.realName}\n🎯 اسم اللعبة: ${data.gameName}\n🆔 ID: ${data.playerId}\n🕹️ نوع اللعبة: ${data.gameType}`;
 
     fetch("https://api.telegram.org/bot6429940325:AAEK3Qc-EahU_bgR9vaPPohTXeQeP9AftEM/sendMessage", {
       method: "POST",
