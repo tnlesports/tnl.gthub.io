@@ -1,77 +1,55 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <title>تقديم إلى فريق TNL</title>
-  <style>
-    body {
-      background: #0b0b0b;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
+baghdadNow.getFullYear(),
+    baghdadNow.getMonth(),
+    baghdadNow.getDate() + 1,
+    18, 0, 0
+  ).getTime();
+
+  const countdownEl = document.getElementById('countdown');
+  const overlay = document.getElementById('waiting');
+  const formSection = document.getElementById('formSection');
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = openTime - now;
+
+    if (distance <= 0) {
+      overlay.style.display = "none";
+      formSection.style.display = "block";
+      clearInterval(interval);
+    } else {
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      countdownEl.textContent =
+        ${String(days).padStart(2, '0')} : ${String(hours).padStart(2, '0')} : ${String(minutes).padStart(2, '0')} : ${String(seconds).padStart(2, '0')};
     }
+  }
 
-    .tnl-rgb {
-      font-size: 48px;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, green, blue);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: moveRGB 4s linear infinite;
-      background-size: 300% 100%;
-    }
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown();
 
-    @keyframes moveRGB {
-      0% {background-position: 0%;}
-      100% {background-position: 100%;}
-    }
+  document.getElementById("applyForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(this).entries());
+    const message = 🎮 طلب تقديم جديد:\n\n👤 الاسم الحقيقي: ${data.realName}\n🎯 اسم اللعبة: ${data.gameName}\n🆔 ID: ${data.playerId}\n🕹️ نوع اللعبة: ${data.gameType};
 
-    h2 {
-      margin: 10px 0;
-    }
-
-    .note {
-      font-size: 16px;
-      color: #ff6666;
-      margin-bottom: 30px;
-      background-color: #1a1a1a;
-      padding: 10px 20px;
-      border: 1px solid #ff4444;
-      border-radius: 8px;
-      max-width: 90%;
-    }
-
-    a.mail-btn {
-      padding: 15px 30px;
-      background: #00ffff;
-      color: black;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #00ffff90;
-      transition: background 0.3s;
-    }
-
-    a.mail-btn:hover {
-      background: #0ff;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="tnl-rgb">TNL TEAM</div>
-  <h2>تقديم إلى الفريق</h2>
-
-  <div class="note">
-    يجب إدخال معلوماتك الحقيقية لحفظك داخل بيانات الفريق.
-  </div>
-
-  <a class="mail-btn" href="thankyou.html">اضغط للتقديم عبر البريد</a>
+    fetch("https://api.telegram.org/bot6429940325:AAEK3Qc-EahU_bgR9vaPPohTXeQeP9AftEM/sendMessage", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        chat_id: "5854920900",
+        text: message
+      })
+    }).then(() => {
+      alert("✅ تم إرسال طلبك بنجاح!");
+      this.reset();
+    }).catch(() => {
+      alert("❌ حدث خطأ أثناء الإرسال!");
+    });
+  });
+</script>
 
 </body>
 </html>
